@@ -25,5 +25,8 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
     "find-my-way": "^9.3.0"
+  },
+  "devDependencies": {
+    "heapdump": "^0.3.15"
   }
 }

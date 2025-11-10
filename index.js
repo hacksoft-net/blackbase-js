@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const querystring = require('querystring');
 const router = require("find-my-way")();
 const Database = require("./lib/database.js");
+const Heapdump = require("heapdump");
 let informationDatabase = new Database();
 let internetProtocolAddressed = new Database();
 let globalPassword;
@@ -41,8 +42,8 @@ router.on('GET', '/health', (req, res) => {
     }
 });
 
-router.on('GET', '/cr', async(req, res) => {
-    res.writeHead(200, {'Content-Type': 'text/html'});
+router.on('GET', '/cr', async (req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/html' });
     res.end(`
         <form action="/create-table" method="post">
             <label for="password">Password:</label><br>
@@ -54,20 +55,23 @@ router.on('GET', '/cr', async(req, res) => {
     `)
 });
 
-router.on('POST', '/create-table', async(req, res) => {
+router.on('POST', '/create-table', async (req, res) => {
     const body = await bodyParse(req);
     const jsonData = querystring.parse(body);
     if (jsonData.password == globalPassword) {
         informationDatabase.createTable(jsonData.name);
         res.writeHead(201, { 'Content-Type': 'text/plain' });
         res.end('Created');
+        Heapdump.writeSnapshot(function (err, filename) {
+            console.log('dump written to', filename);
+        });
     } else {
         res.writeHead(403, { 'Content-Type': 'text/plain' });
         res.end('Forbidden');
     }
 });
 
-router.on('POST', '/set-resource', async(req, res) => {
+router.on('POST', '/set-resource', async (req, res) => {
     const body = await bodyParse(req);
     const jsonData = querystring.parse(body);
     if (jsonData.password == globalPassword) {
@@ -80,7 +84,7 @@ router.on('POST', '/set-resource', async(req, res) => {
     }
 });
 
-router.on('POST', '/get-resource', async(req, res) => {
+router.on('POST', '/get-resource', async (req, res) => {
     const body = await bodyParse(req);
     const jsonData = querystring.parse(body);
     if (jsonData.password == globalPassword) {
@@ -92,7 +96,7 @@ router.on('POST', '/get-resource', async(req, res) => {
     }
 });
 
-router.on('POST', '/get-table-size', async(req, res) => {
+router.on('POST', '/get-table-size', async (req, res) => {
     const body = await bodyParse(req);
     const jsonData = querystring.parse(body);
     if (jsonData.password == globalPassword) {
@@ -104,7 +108,7 @@ router.on('POST', '/get-table-size', async(req, res) => {
     }
 });
 
-router.on('POST', '/delete-resource', async(req, res) => {
+router.on('POST', '/delete-resource', async (req, res) => {
     const body = await bodyParse(req);
     const jsonData = querystring.parse(body);
     if (jsonData.password == globalPassword) {
@@ -147,7 +151,6 @@ class HttpsBlackBase {
         });
 
         process.on("exit", function () {
-
             router.off('GET', '/health');
             router.off('POST', '/create-table');
             router.off('POST', '/set-resource');
@@ -162,4 +165,4 @@ class HttpsBlackBase {
     }
 }
 
-module.exports = { HttpBlackBase }
+module.exports = { HttpBlackBase, HttpsBlackBase }
