@@ -1,10 +1,8 @@
 const http = require("http");
 const https = require("https");
-const bcrypt = require("bcrypt");
 const querystring = require('querystring');
 const router = require("find-my-way")();
 const Database = require("./lib/database.js");
-const Heapdump = require("heapdump");
 let informationDatabase = new Database();
 let internetProtocolAddressed = new Database();
 let globalPassword;

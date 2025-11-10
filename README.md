@@ -4,7 +4,7 @@ An in-memory store for the cloud.
 Blackbase is a somewhat proof-of-concept database for volatile, non-persistent data that has practical applications in session data management, among other things.
 
 > ### Note
-> While tests in memory usage have proven successful (it doesn't use a lot of memory), be very careful when using this software. It may prove volatile and if that is so, immediately contact us using the metadata in the software's package.json (email). Also version 0.1.0 does not have a rate limiter.
+> While tests in memory usage have proven successful (it doesn't use a lot of memory), be very careful when using this software. It may prove volatile and if that is so, immediately contact us using the metadata in the software's package.json (email). Also version 0.1.0-0.2.0 does not have a rate limiter.
 >
 >
 

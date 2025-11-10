@@ -23,7 +23,6 @@
   },
   "homepage": "https://github.com/hacksoft-net/blackbase-js#readme",
   "dependencies": {
-    "bcrypt": "^6.0.0",
     "find-my-way": "^9.3.0"
   },
   "devDependencies": {
