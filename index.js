@@ -60,9 +60,6 @@ router.on('POST', '/create-table', async (req, res) => {
         informationDatabase.createTable(jsonData.name);
         res.writeHead(201, { 'Content-Type': 'text/plain' });
         res.end('Created');
-        Heapdump.writeSnapshot(function (err, filename) {
-            console.log('dump written to', filename);
-        });
     } else {
         res.writeHead(403, { 'Content-Type': 'text/plain' });
         res.end('Forbidden');
