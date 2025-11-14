@@ -124,10 +124,17 @@ Router.on('POST', '/delete-resource', async (req, res) => {
 });
 
 class HttpBlackBase {
-    constructor(password) {
+    constructor(password, rateLimitMax = 200, rateLimitSecsBeforeRetry = 240) {
         globalPassword = password;
         this.server = http.createServer((req, res) => {
-            Router.lookup(req, res);
+            let lmr = Limiter.IPAddRequest(limiter, req.socket.remoteAddress, rateLimitMax);
+            if (lmr) {
+                Router.lookup(req, res);
+            } else {
+                res.writeHead(429, {'Content-Type': 'text/plain'});
+                res.setHeader("Retry-Again", rateLimitSecsBeforeRetry);
+                res.end('Wait, you spammed that crap.');
+            }
         });
 
         process.on("beforeexit", function () {
@@ -146,11 +153,17 @@ class HttpBlackBase {
 }
 
 class HttpsBlackBase {
-    constructor(password, options) {
+    constructor(password, options, rateLimitMax = 200, rateLimitSecsBeforeRetry = 240) {
         globalPassword = password;
         this.server = https.createServer(options, (req, res) => {
-            Limiter.IPAddRequest(limiter, req.socket.remoteAddress);
-            Router.lookup(req, res);
+            let lmr = Limiter.IPAddRequest(limiter, req.socket.remoteAddress, rateLimitMax);
+            if (lmr) {
+                Router.lookup(req, res);
+            } else {
+                res.writeHead(429, {'Content-Type': 'text/plain'});
+                res.setHeader("Retry-Again", rateLimitSecsBeforeRetry);
+                res.end('Wait, you spammed that.');
+            }
         });
 
         process.on("beforeexit", function () {
@@ -168,4 +181,4 @@ class HttpsBlackBase {
     }
 }
 
-module.exports = { HttpBlackBase, HttpsBlackBase }
+module.exports = { HttpBlackBase, HttpsBlackBase, BTSeconds, BTMinutes, BTHours, BTDays }
