@@ -127,7 +127,7 @@ class HttpBlackBase {
     constructor(password, rateLimitMax = 200, rateLimitSecsBeforeRetry = 240) {
         globalPassword = password;
         this.server = http.createServer((req, res) => {
-            let lmr = Limiter.IPAddRequest(limiter, req.socket.remoteAddress, rateLimitMax);
+            let lmr = Limiter.IPAddRequest(Limiter, req.socket.remoteAddress, rateLimitMax);
             if (lmr) {
                 Router.lookup(req, res);
             } else {
@@ -156,7 +156,7 @@ class HttpsBlackBase {
     constructor(password, options, rateLimitMax = 200, rateLimitSecsBeforeRetry = 240) {
         globalPassword = password;
         this.server = https.createServer(options, (req, res) => {
-            let lmr = Limiter.IPAddRequest(limiter, req.socket.remoteAddress, rateLimitMax);
+            let lmr = Limiter.IPAddRequest(Limiter, req.socket.remoteAddress, rateLimitMax);
             if (lmr) {
                 Router.lookup(req, res);
             } else {
