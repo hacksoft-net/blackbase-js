@@ -1,8 +1,9 @@
 const http = require("http");
 const https = require("https");
-const Database = require("./lib/database.js");
 const querystring = require('querystring');
 const Router = require("find-my-way")();
+const Database = require("./lib/database.js");
+const Limiter = require("./lib/limiter.js");
 const TimeHelpers = require("./lib/time.js");
 const BTSeconds = TimeHelpers.BlackbaseTimeSeconds;
 const BTMinutes = TimeHelpers.BlackbaseTimeMinutes;
@@ -10,7 +11,7 @@ const BTHours = TimeHelpers.BlackbaseTimeHours;
 const BTDays = TimeHelpers.BlackbaseTimeDays;
 
 let informationDatabase = new Database();
-let internetProtocolAddressed = new Database();
+let limiter = Limiter.IPDB();
 let globalPassword;
 
 const bodyParse = async (req) => {
@@ -44,19 +45,6 @@ Router.on('GET', '/health', (req, res) => {
             "details": "Database/Map Not Working"
         }`);
     }
-});
-
-Router.on('GET', '/cr', async (req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end(`
-        <form action="/create-table" method="post">
-            <label for="password">Password:</label><br>
-            <input type="password" id="password" name="password">
-            <label for="name">Name:</label><br>
-            <input type="text" id="name" name="name">
-            <input type="submit" value="Submit">
-        </form>
-    `)
 });
 
 Router.on('POST', '/create-table', async (req, res) => {
@@ -142,7 +130,7 @@ class HttpBlackBase {
             Router.lookup(req, res);
         });
 
-        process.on("exit", function () {
+        process.on("beforeexit", function () {
             Router.off('GET', '/health');
             Router.off('POST', '/create-table');
             Router.off('POST', '/set-resource');
@@ -161,10 +149,11 @@ class HttpsBlackBase {
     constructor(password, options) {
         globalPassword = password;
         this.server = https.createServer(options, (req, res) => {
+            Limiter.IPAddRequest(limiter, req.socket.remoteAddress);
             Router.lookup(req, res);
         });
 
-        process.on("exit", function () {
+        process.on("beforeexit", function () {
             Router.off('GET', '/health');
             Router.off('POST', '/create-table');
             Router.off('POST', '/set-resource');
