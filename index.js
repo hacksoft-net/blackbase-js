@@ -124,16 +124,15 @@ Router.on('POST', '/delete-resource', async (req, res) => {
 });
 
 class HttpBlackBase {
-    constructor(password, rateLimitMax = 200, rateLimitSecsBeforeRetry = 240) {
+    constructor(password, rateLimitMax = 200, rateLimitMSBeforeRetry = 2400) {
         globalPassword = password;
         this.server = http.createServer((req, res) => {
-            let lmr = Limiter.IPAddRequest(Limiter, req.socket.remoteAddress, rateLimitMax);
+            let lmr = Limiter.IPAddRequest(limiter, req.socket.remoteAddress, rateLimitMax, rateLimitMSBeforeRetry);
             if (lmr) {
                 Router.lookup(req, res);
             } else {
-                res.writeHead(429, {'Content-Type': 'text/plain'});
-                res.setHeader("Retry-Again", rateLimitSecsBeforeRetry);
-                res.end('Wait, you spammed that crap.');
+                res.writeHead(429, {'Content-Type': 'text/plain', 'Retry-After': rateLimitMSBeforeRetry / 100});
+                res.end('429 Too Many Requests');
             }
         });
 
@@ -153,15 +152,14 @@ class HttpBlackBase {
 }
 
 class HttpsBlackBase {
-    constructor(password, options, rateLimitMax = 200, rateLimitSecsBeforeRetry = 240) {
+    constructor(password, options, rateLimitMax = 200, rateLimitMSBeforeRetry = 2400) {
         globalPassword = password;
         this.server = https.createServer(options, (req, res) => {
-            let lmr = Limiter.IPAddRequest(Limiter, req.socket.remoteAddress, rateLimitMax);
+            let lmr = Limiter.IPAddRequest(limiter, req.socket.remoteAddress, rateLimitMax, rateLimitMSBeforeRetry);
             if (lmr) {
                 Router.lookup(req, res);
             } else {
-                res.writeHead(429, {'Content-Type': 'text/plain'});
-                res.setHeader("Retry-Again", rateLimitSecsBeforeRetry);
+                res.writeHead(429, {'Content-Type': 'text/plain', 'Retry-After': rateLimitMSBeforeRetry / 100});
                 res.end('Wait, you spammed that.');
             }
         });
