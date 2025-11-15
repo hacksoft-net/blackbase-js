@@ -14,7 +14,10 @@
     "database",
     "backend",
     "memory",
-    "javascript"
+    "javascript",
+    "volatile",
+    "ttl",
+    "cache"
   ],
   "author": "haektalks",
   "license": "MIT",
