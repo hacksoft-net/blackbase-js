@@ -1,6 +1,6 @@
 {
   "name": "blackbase",
-  "version": "0.1.3",
+  "version": "1.0.0",
   "description": "In-memory store for the web.",
   "main": "index.js",
   "scripts": {
@@ -23,8 +23,7 @@
   },
   "homepage": "https://github.com/hacksoft-net/blackbase-js#readme",
   "dependencies": {
-    "find-my-way": "^9.3.0",
-    "ip-address": "^10.1.0"
+    "find-my-way": "^9.3.0"
   },
   "devDependencies": {
     "heapdump": "^0.3.15"
