@@ -124,10 +124,10 @@ Router.on('POST', '/delete-resource', async (req, res) => {
 });
 
 class HttpBlackBase {
-    constructor(password, rateLimitMax = 200, rateLimitMSBeforeRetry = 2400) {
+    constructor(password, ipLimitMaps = new Map().set("*", 100), rateLimitMSBeforeRetry = 2400) {
         globalPassword = password;
         this.server = http.createServer((req, res) => {
-            let lmr = Limiter.IPAddRequest(limiter, req.socket.remoteAddress, rateLimitMax, rateLimitMSBeforeRetry);
+            let lmr = Limiter.IPAddRequest(limiter, req.socket.remoteAddress, Limiter.IPParseMap(ipLimitMaps), rateLimitMSBeforeRetry);
             if (lmr) {
                 Router.lookup(req, res);
             } else {
@@ -152,10 +152,10 @@ class HttpBlackBase {
 }
 
 class HttpsBlackBase {
-    constructor(password, options, rateLimitMax = 200, rateLimitMSBeforeRetry = 2400) {
+    constructor(password, options, ipLimitMaps = new Map().set("*", 100), rateLimitMSBeforeRetry = 2400) {
         globalPassword = password;
         this.server = https.createServer(options, (req, res) => {
-            let lmr = Limiter.IPAddRequest(limiter, req.socket.remoteAddress, rateLimitMax, rateLimitMSBeforeRetry);
+            let lmr = Limiter.IPAddRequest(limiter, req.socket.remoteAddress, Limiter.IPParseMap(ipLimitMaps), rateLimitMSBeforeRetry);
             if (lmr) {
                 Router.lookup(req, res);
             } else {

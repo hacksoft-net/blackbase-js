@@ -91,7 +91,7 @@ router.on("GET", "/set-cached-resource", (req, res) => {
     `);
 });
 
-new database.HttpBlackBase("jupers", 2, 2800).listen(3000);
+new database.HttpBlackBase("jupers", new Map().set("*", 1), 8000).listen(3000);
 
 http.createServer((req, res) => {
     router.lookup(req, res);
