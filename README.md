@@ -18,7 +18,7 @@ This creates a new instance of Blackbase.
 
 ```javascript
 const Blackbase = require("blackbase");
-const Database = new Blackbase.HttpBlackBase("password", {"*", 12});
+const Database = new Blackbase.HttpBlackBase("password", new Map().set("*", 1));
 ```
 
 ## Breakdown and HttpBlackBase/HttpsBlackBase
@@ -48,7 +48,7 @@ IP Limit Maps work like normal Maps. All you have to do is initialize a new `Map
 
 `urlAddress: maximumRequests` - A specific request falls under this policy. For example:
 ```javascript
-const Database = new Blackbase.HttpBlackBase("password", {"/url-address", 58});
+const Database = new Blackbase.HttpBlackBase("password", new Map().set("/url-address", 21));
 ```
 
 ## Help
