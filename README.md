@@ -3,6 +3,11 @@ An in-memory store for the cloud.
 ## What Is Blackbase?
 Blackbase is a somewhat proof-of-concept database for volatile, non-persistent data that has practical applications in session data management, among other things.
 
+> ### Encryption
+> `>= 2.1.0`are the only versions with built in encryption---and if you do not see any documentation for any encryption functions-it does not exist in that version. We recommend you encrypt data at the application level.
+>
+> 
+
 > ### Note
 > While tests using this software have usually been successful, if you have any issues or any problems, please contact me in Github directly. This is very important, as I do not use my relay email.
 >
