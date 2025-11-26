@@ -160,7 +160,7 @@ class HttpsBlackBase {
                 Router.lookup(req, res);
             } else {
                 res.writeHead(429, {'Content-Type': 'text/plain', 'Retry-After': rateLimitMSBeforeRetry / 100});
-                res.end('Wait, you spammed that.');
+                res.end('429 Too Many Requests');
             }
         });
 
