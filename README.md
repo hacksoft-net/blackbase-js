@@ -33,7 +33,7 @@ The following URLs can be used for processing a POST request with "password" in 
 
 `/set-cached-resource` - Adds a key-value pair to the table with TTL. Requires "tableID", "key", "value", and "ttl". (Note: This will not be patched anytime soon. When you use set-cached-resource, you are essentially putting an unstoppable timer on this. It may be fixed later.)
 
-`/get-resource` - Adds a key-value pair to the table with TTL. Requires "tableID" and "key"
+`/get-resource` - Gets a key-value pair from the table. <b>Will return undefined if no result is found.</b> Requires "tableID" and "key"
 
 `/get-table-size` - Gets table size. Requires "tableID"
 
